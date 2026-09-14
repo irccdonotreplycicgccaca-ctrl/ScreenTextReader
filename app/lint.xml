@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- These checks depend on the release date of new libraries, not on the code.
+         They stay visible in the report without failing an otherwise unchanged build. -->
+    <issue id="GradleDependency" severity="informational" />
+    <issue id="AndroidGradlePluginVersion" severity="informational" />
+    <issue id="NewerVersionAvailable" severity="informational" />
+    <issue id="OldTargetApi" severity="informational" />
+</lint>
