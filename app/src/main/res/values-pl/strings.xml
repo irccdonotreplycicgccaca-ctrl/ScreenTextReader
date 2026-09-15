@@ -22,8 +22,6 @@
     <string name="settings_title">Analiza</string>
     <string name="settings_minimum_confidence">Próg pewności: %1$d%%</string>
     <string name="settings_decimal_separator">Separator dziesiętny</string>
-    <string name="decimal_separator_comma">Przecinek 1 234,5</string>
-    <string name="decimal_separator_dot">Kropka 1,234.5</string>
 
     <string name="statistics_title">Liczby</string>
     <string name="statistics_empty">Brak liczb w rozpoznanych wierszach.</string>

@@ -24,8 +24,8 @@
     <string name="settings_title">Analysis</string>
     <string name="settings_minimum_confidence">Confidence threshold: %1$d%%</string>
     <string name="settings_decimal_separator">Decimal separator</string>
-    <string name="decimal_separator_comma">Comma 1 234,5</string>
-    <string name="decimal_separator_dot">Dot 1,234.5</string>
+    <string name="decimal_separator_comma" translatable="false">1 234,5</string>
+    <string name="decimal_separator_dot" translatable="false">1,234.5</string>
 
     <string name="statistics_title">Numbers</string>
     <string name="statistics_empty">No numbers found in the recognized lines.</string>
