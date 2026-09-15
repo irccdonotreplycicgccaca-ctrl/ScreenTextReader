@@ -74,12 +74,8 @@ private fun CaptureState.titleRes(): Int = when (this) {
 @StringRes
 private fun CaptureState.descriptionRes(): Int = when (this) {
     CaptureState.Idle -> R.string.status_idle_description
-
     CaptureState.Starting -> R.string.status_starting_description
-
-    is CaptureState.Running ->
-        if (isPaused) R.string.status_paused_description else R.string.status_reading_description
-
+    is CaptureState.Running -> if (isPaused) R.string.status_paused_description else R.string.status_reading_description
     is CaptureState.Failed -> failure.messageRes()
 }
 

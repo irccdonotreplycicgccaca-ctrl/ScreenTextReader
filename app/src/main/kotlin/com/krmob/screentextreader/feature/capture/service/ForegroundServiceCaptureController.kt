@@ -29,8 +29,8 @@ class ForegroundServiceCaptureController @Inject constructor(
             return
         }
         sessionStore.markStarting()
+        val consent = CaptureConsent(resultCode = resultCode, data = data)
         try {
-            val consent = CaptureConsent(resultCode = resultCode, data = data)
             ContextCompat.startForegroundService(context, ScreenCaptureService.startIntent(context, consent))
         } catch (exception: IllegalStateException) {
             Log.e(TAG, "The capture service could not be started", exception)

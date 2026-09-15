@@ -17,6 +17,7 @@ import com.krmob.screentextreader.core.designsystem.theme.Dimens
 import com.krmob.screentextreader.feature.analysis.domain.DecimalSeparator
 import com.krmob.screentextreader.feature.analysis.domain.NumberStatistics
 import com.krmob.screentextreader.feature.capture.ui.toDisplayString
+import java.math.BigDecimal
 
 @Composable
 internal fun NumberStatisticsCard(
@@ -41,27 +42,21 @@ internal fun NumberStatisticsCard(
 
                 is NumberStatistics.Summary -> {
                     StatisticRow(label = R.string.statistics_count, value = statistics.count.toString())
-                    StatisticRow(
-                        label = R.string.statistics_sum,
-                        value = statistics.sum.toDisplayString(decimalSeparator)
-                    )
-                    StatisticRow(
-                        label = R.string.statistics_minimum,
-                        value = statistics.minimum.toDisplayString(decimalSeparator)
-                    )
-                    StatisticRow(
-                        label = R.string.statistics_maximum,
-                        value = statistics.maximum.toDisplayString(decimalSeparator)
-                    )
-                    StatisticRow(
-                        label = R.string.statistics_average,
-                        value = statistics.average.toDisplayString(decimalSeparator)
-                    )
+                    statistics.numberRows().forEach { (label, number) ->
+                        StatisticRow(label = label, value = number.toDisplayString(decimalSeparator))
+                    }
                 }
             }
         }
     }
 }
+
+private fun NumberStatistics.Summary.numberRows(): List<Pair<Int, BigDecimal>> = listOf(
+    R.string.statistics_sum to sum,
+    R.string.statistics_minimum to minimum,
+    R.string.statistics_maximum to maximum,
+    R.string.statistics_average to average
+)
 
 @Composable
 private fun StatisticRow(@StringRes label: Int, value: String, modifier: Modifier = Modifier) {

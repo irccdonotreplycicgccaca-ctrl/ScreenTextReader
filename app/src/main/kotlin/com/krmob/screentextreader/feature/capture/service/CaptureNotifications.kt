@@ -1,16 +1,13 @@
 package com.krmob.screentextreader.feature.capture.service
 
-import android.Manifest
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import com.krmob.screentextreader.R
+import com.krmob.screentextreader.core.permissions.checkNotificationPermission
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -51,12 +48,7 @@ class CaptureNotifications @Inject constructor(@param:ApplicationContext private
 
     /** Refreshes the notification; skipped when the user has not allowed notifications. */
     fun update(isPaused: Boolean, lineCount: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
+        if (!context.checkNotificationPermission()) return
         notificationManager.notify(NOTIFICATION_ID, build(isPaused = isPaused, lineCount = lineCount))
     }
 

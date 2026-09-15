@@ -56,7 +56,7 @@ class CaptureViewModelTest {
             val uiState = awaitItem()
             assertEquals(listOf(total), uiState.acceptedLines)
             assertEquals(1, uiState.rejectedLineCount)
-            assertEquals(BigDecimal("10.50"), assertIs<NumberStatistics.Summary>(uiState.statistics).sum)
+            assertEquals(BigDecimal("10.50"), summaryOf(uiState).sum)
         }
     }
 
@@ -83,11 +83,11 @@ class CaptureViewModelTest {
         val viewModel = createViewModel()
 
         viewModel.uiState.test {
-            assertEquals(BigDecimal("1234"), assertIs<NumberStatistics.Summary>(awaitItem().statistics).sum)
+            assertEquals(BigDecimal("1234"), summaryOf(awaitItem()).sum)
 
             viewModel.onDecimalSeparatorChange(DecimalSeparator.DOT)
 
-            assertEquals(BigDecimal("1.234"), assertIs<NumberStatistics.Summary>(awaitItem().statistics).sum)
+            assertEquals(BigDecimal("1.234"), summaryOf(awaitItem()).sum)
         }
     }
 
@@ -135,6 +135,8 @@ class CaptureViewModelTest {
     )
 
     private fun textOf(vararg lines: RecognizedLine) = RecognizedText(lines = lines.toList())
+
+    private fun summaryOf(uiState: CaptureUiState) = assertIs<NumberStatistics.Summary>(uiState.statistics)
 }
 
 private class FakeCaptureSession : CaptureSession {

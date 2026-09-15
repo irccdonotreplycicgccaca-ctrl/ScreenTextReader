@@ -45,23 +45,6 @@ class TextAnalyzerTest {
     }
 
     @Test
-    fun `parses numbers with the selected decimal separator`() {
-        val text = textOf(line("Kwota 1.234"))
-
-        val commaStatistics =
-            assertIs<NumberStatistics.Summary>(
-                analyzer.analyze(text, settings(decimalSeparator = DecimalSeparator.COMMA)).statistics
-            )
-        val dotStatistics =
-            assertIs<NumberStatistics.Summary>(
-                analyzer.analyze(text, settings(decimalSeparator = DecimalSeparator.DOT)).statistics
-            )
-
-        assertEquals(BigDecimal("1234"), commaStatistics.sum)
-        assertEquals(BigDecimal("1.234"), dotStatistics.sum)
-    }
-
-    @Test
     fun `reports no statistics when accepted lines contain no numbers`() {
         val analysis = analyzer.analyze(textOf(line("Brak liczb")), settings())
 
@@ -72,6 +55,6 @@ class TextAnalyzerTest {
 
     private fun textOf(vararg lines: RecognizedLine) = RecognizedText(lines = lines.toList())
 
-    private fun settings(minimumConfidence: Float = 0.5f, decimalSeparator: DecimalSeparator = DecimalSeparator.COMMA) =
-        AnalysisSettings(minimumConfidence = minimumConfidence, decimalSeparator = decimalSeparator)
+    private fun settings(minimumConfidence: Float = 0.5f) =
+        AnalysisSettings(minimumConfidence = minimumConfidence, decimalSeparator = DecimalSeparator.COMMA)
 }

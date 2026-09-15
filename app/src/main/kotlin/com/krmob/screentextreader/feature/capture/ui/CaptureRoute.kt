@@ -1,19 +1,15 @@
 package com.krmob.screentextreader.feature.capture.ui
 
 import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.krmob.screentextreader.core.permissions.checkNotificationPermission
 
 @Composable
 fun CaptureRoute(modifier: Modifier = Modifier, viewModel: CaptureViewModel = hiltViewModel()) {
@@ -32,10 +28,10 @@ fun CaptureRoute(modifier: Modifier = Modifier, viewModel: CaptureViewModel = hi
     CaptureScreen(
         uiState = uiState,
         onStartClick = {
-            if (shouldRequestNotificationPermission(context)) {
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            } else {
+            if (context.checkNotificationPermission()) {
                 consentLauncher.launch(viewModel.createConsentIntent())
+            } else {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         },
         onStopClick = viewModel::onStopClick,
@@ -45,9 +41,3 @@ fun CaptureRoute(modifier: Modifier = Modifier, viewModel: CaptureViewModel = hi
         modifier = modifier
     )
 }
-
-@ChecksSdkIntAtLeast(api = Build.VERSION_CODES.TIRAMISU)
-private fun shouldRequestNotificationPermission(context: Context): Boolean =
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-        ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
-        PackageManager.PERMISSION_GRANTED

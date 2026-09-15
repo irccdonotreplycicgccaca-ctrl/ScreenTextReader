@@ -27,7 +27,7 @@ import com.krmob.screentextreader.feature.capture.ui.component.NumberStatisticsC
 import com.krmob.screentextreader.feature.capture.ui.component.RecognizedLineRow
 import com.krmob.screentextreader.feature.capture.ui.component.RecognizedLinesHeader
 
-// Lets the list reuse line rows among the cards above them.
+// Rows share one content type so LazyColumn can reuse their compositions.
 private const val LINE_CONTENT_TYPE = "line"
 
 @Composable

@@ -1,7 +1,6 @@
 package com.krmob.screentextreader.feature.capture.data
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.media.projection.MediaProjection
 import android.os.Handler
 import android.os.Looper
@@ -63,7 +62,7 @@ class ScreenCaptureSessionRunner @Inject constructor(
         recognizer: MlKitTextRecognizer,
         projectionCallback: ProjectionCallback
     ) = coroutineScope {
-        val reader = ScreenTextReader { capturer.latestFrame()?.let { frame -> recognizer.recognizeOrSkip(frame) } }
+        val reader = ScreenTextReader { readLatestFrame(capturer, recognizer) }
         // Reading this app's own screen would feed the results back into the recognizer.
         val shouldScan = combine(
             projectionCallback.isContentVisible,
@@ -81,9 +80,16 @@ class ScreenCaptureSessionRunner @Inject constructor(
     }
 }
 
-private suspend fun MlKitTextRecognizer.recognizeOrSkip(frame: Bitmap): RecognizedText? = try {
-    recognize(frame)
-} catch (exception: MlKitException) {
-    Log.w(TAG, "Text recognition failed, skipping the frame", exception)
-    null
+/** Returns null when the screen has not changed or the recognizer rejected the frame. */
+private suspend fun readLatestFrame(
+    capturer: MediaProjectionScreenCapturer,
+    recognizer: MlKitTextRecognizer
+): RecognizedText? {
+    val frame = capturer.latestFrame() ?: return null
+    return try {
+        recognizer.recognize(frame)
+    } catch (exception: MlKitException) {
+        Log.w(TAG, "Text recognition failed, skipping the frame", exception)
+        null
+    }
 }

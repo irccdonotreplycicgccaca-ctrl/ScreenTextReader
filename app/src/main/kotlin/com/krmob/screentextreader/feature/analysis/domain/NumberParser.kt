@@ -4,8 +4,6 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 private const val MINUS_SIGN = '\u2212'
-private const val HEX_RADIX = 16
-private const val UNICODE_ESCAPE_DIGITS = 4
 
 /** Finds the numbers written in a line of recognized text. */
 class NumberParser @Inject constructor() {
@@ -37,8 +35,8 @@ private fun numberPattern(decimalSeparator: DecimalSeparator): Regex {
     )
 }
 
-// A \uXXXX escape keeps separators such as '.', '-' and spaces literal inside a character class.
-private fun Char.toRegexLiteral(): String = "\\u" + code.toString(HEX_RADIX).padStart(UNICODE_ESCAPE_DIGITS, '0')
+// A backslash before any non-letter keeps separators such as '.' and spaces literal inside a character class.
+private fun Char.toRegexLiteral(): String = "\\$this"
 
 private fun String.parseNumber(decimalSeparator: DecimalSeparator): BigDecimal {
     val normalized =
