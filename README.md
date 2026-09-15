@@ -4,6 +4,10 @@ A small Android app that reads text from the screen in real time. It captures th
 
 The project is a compact example of how I structure a native Android app in Kotlin: clear ownership of state, platform APIs kept behind small seams, and the logic that matters covered by tests.
 
+<img src="docs/screenshot.png" alt="Screen Text Reader after reading the Settings app on Android 16" width="320">
+
+The screenshot comes from an Android 16 emulator: capture was started for the entire screen, the Settings app stayed in front for twenty seconds, and the app was opened again, which paused recognition and showed the result.
+
 ## What the app does
 
 - Asks for screen capture consent for every session, as Android 14 requires, and runs the capture in a `mediaProjection` foreground service with a Stop action in the notification.
