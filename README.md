@@ -14,7 +14,7 @@ The screenshot comes from an Android 16 emulator: capture was started for the en
 - Reads the newest frame once per second, recognizes Latin text on the device (the ML Kit model is bundled, so it works offline) and publishes it only when the text has changed.
 - Pauses recognition while the app itself is in front, so it never reads its own results, and while the shared app window is hidden (single-app sharing on Android 14 and newer). A frame that is already being recognized when the pause starts is still published, because it was captured from the other app.
 - Analyses every frame with two parameters:
-  - **minimum line confidence**: lines below the threshold are left out and counted,
+  - **confidence threshold**: lines the recognizer is less sure about are left out and counted,
   - **decimal separator**: decides whether `1.234` means one thousand two hundred thirty-four or a bit more than one.
 - Shows the accepted lines and the count, sum, minimum, maximum and average of the numbers found in them. Changing a parameter re-analyses the text already recognized, without waiting for the next frame.
 

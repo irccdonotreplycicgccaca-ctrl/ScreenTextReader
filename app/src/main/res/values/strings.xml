@@ -7,13 +7,13 @@
     <string name="status_starting_title">Starting</string>
     <string name="status_starting_description">Waiting for the screen capture to begin.</string>
     <string name="status_reading_title">Reading the screen</string>
-    <string name="status_reading_description">Text is recognized once per second while the shared content is visible.</string>
-    <string name="status_paused_title">Paused</string>
-    <string name="status_paused_description">Recognition pauses while this app is open or the shared app is hidden, so the app never reads its own screen.</string>
+    <string name="status_reading_description">Text is recognized once per second while the shared screen or app is visible.</string>
+    <string name="status_paused_title">Reading paused</string>
+    <string name="status_paused_description">Reading pauses while this screen is in front or the shared app is hidden. This way Screen Text Reader never reads its own screen.</string>
     <string name="status_failed_title">Capture stopped</string>
 
     <string name="failure_consent_denied">Screen capture was not allowed.</string>
-    <string name="failure_projection_unavailable">The system did not grant a screen capture session.</string>
+    <string name="failure_projection_unavailable">The system did not start the screen capture.</string>
     <string name="failure_capture_error">Screen capture stopped because of an error.</string>
 
     <string name="action_start_capture">Start capture</string>
@@ -22,14 +22,14 @@
     <string name="action_dismiss">Dismiss</string>
 
     <string name="settings_title">Analysis</string>
-    <string name="settings_minimum_confidence">Minimum line confidence: %1$d%%</string>
+    <string name="settings_minimum_confidence">Confidence threshold: %1$d%%</string>
     <string name="settings_decimal_separator">Decimal separator</string>
     <string name="decimal_separator_comma">Comma 1 234,5</string>
     <string name="decimal_separator_dot">Dot 1,234.5</string>
 
     <string name="statistics_title">Numbers</string>
-    <string name="statistics_empty">No numbers found in the accepted lines.</string>
-    <string name="statistics_count">Count</string>
+    <string name="statistics_empty">No numbers found in the recognized lines.</string>
+    <string name="statistics_count">Found</string>
     <string name="statistics_sum">Sum</string>
     <string name="statistics_minimum">Minimum</string>
     <string name="statistics_maximum">Maximum</string>

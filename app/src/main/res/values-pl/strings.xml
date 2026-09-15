@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="status_idle_title">Odczyt wyłączony</string>
-    <string name="status_idle_description">Włącz przechwytywanie, a potem przejdź do aplikacji, z której chcesz odczytać tekst.</string>
+    <string name="status_idle_description">Rozpocznij przechwytywanie, a potem przejdź do aplikacji, z której chcesz odczytać tekst.</string>
     <string name="status_starting_title">Uruchamianie</string>
-    <string name="status_starting_description">Czekam na rozpoczęcie przechwytywania ekranu.</string>
-    <string name="status_reading_title">Odczytuję ekran</string>
-    <string name="status_reading_description">Tekst jest rozpoznawany co sekundę, dopóki udostępniana treść jest widoczna.</string>
-    <string name="status_paused_title">Wstrzymano</string>
-    <string name="status_paused_description">Rozpoznawanie jest wstrzymane, gdy ta aplikacja jest otwarta albo udostępniona aplikacja jest ukryta, dzięki czemu aplikacja nie odczytuje własnego ekranu.</string>
+    <string name="status_starting_description">Trwa uruchamianie przechwytywania ekranu.</string>
+    <string name="status_reading_title">Trwa odczyt ekranu</string>
+    <string name="status_reading_description">Tekst jest rozpoznawany co sekundę, dopóki widać udostępniony ekran albo aplikację.</string>
+    <string name="status_paused_title">Odczyt wstrzymany</string>
+    <string name="status_paused_description">Odczyt jest wstrzymany, gdy ten ekran jest na wierzchu albo udostępniona aplikacja jest schowana. Dzięki temu Screen Text Reader nie czyta własnego ekranu.</string>
     <string name="status_failed_title">Przechwytywanie przerwane</string>
 
-    <string name="failure_consent_denied">Nie zezwolono na przechwytywanie ekranu.</string>
-    <string name="failure_projection_unavailable">System nie udostępnił sesji przechwytywania ekranu.</string>
-    <string name="failure_capture_error">Przechwytywanie ekranu zatrzymało się z powodu błędu.</string>
+    <string name="failure_consent_denied">Brak zgody na przechwytywanie ekranu.</string>
+    <string name="failure_projection_unavailable">System nie uruchomił przechwytywania ekranu.</string>
+    <string name="failure_capture_error">Przechwytywanie ekranu przerwano z powodu błędu.</string>
 
-    <string name="action_start_capture">Włącz przechwytywanie</string>
+    <string name="action_start_capture">Rozpocznij przechwytywanie</string>
     <string name="action_stop_capture">Zatrzymaj</string>
     <string name="action_try_again">Spróbuj ponownie</string>
     <string name="action_dismiss">Zamknij</string>
 
     <string name="settings_title">Analiza</string>
-    <string name="settings_minimum_confidence">Minimalna pewność linii: %1$d%%</string>
+    <string name="settings_minimum_confidence">Próg pewności: %1$d%%</string>
     <string name="settings_decimal_separator">Separator dziesiętny</string>
     <string name="decimal_separator_comma">Przecinek 1 234,5</string>
     <string name="decimal_separator_dot">Kropka 1,234.5</string>
 
     <string name="statistics_title">Liczby</string>
-    <string name="statistics_empty">W zaakceptowanych liniach nie ma liczb.</string>
-    <string name="statistics_count">Ile liczb</string>
+    <string name="statistics_empty">Brak liczb w rozpoznanych wierszach.</string>
+    <string name="statistics_count">Znaleziono</string>
     <string name="statistics_sum">Suma</string>
     <string name="statistics_minimum">Minimum</string>
     <string name="statistics_maximum">Maksimum</string>
     <string name="statistics_average">Średnia</string>
 
-    <string name="lines_title">Rozpoznane linie</string>
+    <string name="lines_title">Rozpoznane wiersze</string>
     <string name="lines_empty">Nie rozpoznano jeszcze tekstu.</string>
     <plurals name="lines_rejected">
-        <item quantity="one">%d linia poniżej progu pewności</item>
-        <item quantity="few">%d linie poniżej progu pewności</item>
-        <item quantity="many">%d linii poniżej progu pewności</item>
-        <item quantity="other">%d linii poniżej progu pewności</item>
+        <item quantity="one">%d wiersz poniżej progu pewności</item>
+        <item quantity="few">%d wiersze poniżej progu pewności</item>
+        <item quantity="many">%d wierszy poniżej progu pewności</item>
+        <item quantity="other">%d wiersza poniżej progu pewności</item>
     </plurals>
 
     <string name="notification_channel_name">Przechwytywanie ekranu</string>
     <string name="notification_channel_description">Widoczne, gdy aplikacja odczytuje ekran.</string>
-    <string name="notification_title_reading">Odczytuję ekran</string>
+    <string name="notification_title_reading">Trwa odczyt ekranu</string>
     <string name="notification_title_paused">Odczyt wstrzymany</string>
     <plurals name="notification_recognized_lines">
-        <item quantity="one">Rozpoznano %d linię</item>
-        <item quantity="few">Rozpoznano %d linie</item>
-        <item quantity="many">Rozpoznano %d linii</item>
-        <item quantity="other">Rozpoznano %d linii</item>
+        <item quantity="one">Rozpoznano %d wiersz</item>
+        <item quantity="few">Rozpoznano %d wiersze</item>
+        <item quantity="many">Rozpoznano %d wierszy</item>
+        <item quantity="other">Rozpoznano %d wiersza</item>
     </plurals>
     <string name="notification_action_stop">Zatrzymaj</string>
 </resources>
