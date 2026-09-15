@@ -4,8 +4,10 @@ import app.cash.turbine.test
 import com.krmob.screentextreader.core.model.RecognizedLine
 import com.krmob.screentextreader.core.model.RecognizedText
 import kotlin.test.assertEquals
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceTimeBy
@@ -40,12 +42,11 @@ class ScreenTextScanningTest {
 
     @Test
     fun `does not emit text identical to the previous frame even when confidence differs`() = runTest {
-        val reader =
-            FakeScreenTextReader(
-                textOf("Suma 10,00", confidence = 0.8f),
-                textOf("Suma 10,00", confidence = 0.95f),
-                textOf("Suma 12,00")
-            )
+        val reader = FakeScreenTextReader(
+            textOf("Suma 10,00", confidence = 0.8f),
+            textOf("Suma 10,00", confidence = 0.95f),
+            textOf("Suma 12,00")
+        )
 
         reader.scan(flowOf(true), SCAN_INTERVAL).test {
             assertEquals(textOf("Suma 10,00", confidence = 0.8f), awaitItem())
@@ -76,11 +77,28 @@ class ScreenTextScanningTest {
         }
     }
 
+    @Test
+    fun `publishes the frame that was being recognized when scanning paused`() = runTest {
+        val reader = FakeScreenTextReader(textOf("Odczyt w toku"), readDuration = SCAN_INTERVAL * 3)
+        val shouldScan = MutableStateFlow(true)
+
+        reader.scan(shouldScan, SCAN_INTERVAL).test {
+            advanceTimeBy(SCAN_INTERVAL)
+            shouldScan.value = false
+
+            assertEquals(textOf("Odczyt w toku"), awaitItem())
+            advanceTimeBy(SCAN_INTERVAL * 5)
+            assertEquals(1, reader.readCount)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     private fun textOf(text: String, confidence: Float = 0.9f) =
         RecognizedText(lines = listOf(RecognizedLine(text = text, confidence = confidence)))
 }
 
-private class FakeScreenTextReader(vararg frames: RecognizedText?) : ScreenTextReader {
+private class FakeScreenTextReader(vararg frames: RecognizedText?, private val readDuration: Duration = Duration.ZERO) :
+    ScreenTextReader {
     private val remainingFrames = ArrayDeque(frames.toList())
 
     var readCount = 0
@@ -88,6 +106,7 @@ private class FakeScreenTextReader(vararg frames: RecognizedText?) : ScreenTextR
 
     override suspend fun readLatestFrame(): RecognizedText? {
         readCount++
+        delay(readDuration)
         return remainingFrames.removeFirstOrNull()
     }
 }

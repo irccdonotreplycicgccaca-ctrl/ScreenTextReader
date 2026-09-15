@@ -8,7 +8,7 @@ The project is a compact example of how I structure a native Android app in Kotl
 
 - Asks for screen capture consent for every session, as Android 14 requires, and runs the capture in a `mediaProjection` foreground service with a Stop action in the notification.
 - Reads the newest frame once per second, recognizes Latin text on the device (the ML Kit model is bundled, so it works offline) and publishes it only when the text has changed.
-- Pauses recognition while the app itself is in front, so it never reads its own results, and while the shared app window is hidden (single-app sharing on Android 14 and newer).
+- Pauses recognition while the app itself is in front, so it never reads its own results, and while the shared app window is hidden (single-app sharing on Android 14 and newer). A frame that is already being recognized when the pause starts is still published, because it was captured from the other app.
 - Analyses every frame with two parameters:
   - **minimum line confidence**: lines below the threshold are left out and counted,
   - **decimal separator**: decides whether `1.234` means one thousand two hundred thirty-four or a bit more than one.
@@ -89,7 +89,7 @@ The Kotlin compiler runs with `allWarningsAsErrors`. Lint checks that depend on 
 ## Tests
 
 - `NumberParserTest`, `TextAnalyzerTest`: parsing rules, confidence threshold, statistics and rounding.
-- `ScreenTextScanningTest`: reading on every interval, skipping frames without changes, pausing and resuming, deduplication of unchanged text. Runs on virtual time.
+- `ScreenTextScanningTest`: reading on every interval, skipping frames without changes, pausing and resuming, finishing a read that was in progress when the pause started, deduplication of unchanged text. Runs on virtual time.
 - `CaptureSessionStoreTest`: session state transitions, including a failure that survives the stop.
 - `CaptureViewModelTest`: UI state produced from the session and the settings, re-analysis after a parameter change, settings restored from `SavedStateHandle`, intents forwarded to the controller.
 - `CaptureScreenTest`: Compose UI behaviour of the stateless screen on Robolectric.
