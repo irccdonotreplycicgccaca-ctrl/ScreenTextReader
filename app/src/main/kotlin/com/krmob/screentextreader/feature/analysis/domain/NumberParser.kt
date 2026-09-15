@@ -37,6 +37,7 @@ private fun numberPattern(decimalSeparator: DecimalSeparator): Regex {
     )
 }
 
+// A \uXXXX escape keeps separators such as '.', '-' and spaces literal inside a character class.
 private fun Char.toRegexLiteral(): String = "\\u" + code.toString(HEX_RADIX).padStart(UNICODE_ESCAPE_DIGITS, '0')
 
 private fun String.parseNumber(decimalSeparator: DecimalSeparator): BigDecimal {

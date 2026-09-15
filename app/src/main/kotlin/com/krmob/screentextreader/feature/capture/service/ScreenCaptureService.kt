@@ -6,7 +6,6 @@ import android.content.pm.ServiceInfo
 import android.media.projection.MediaProjectionManager
 import android.util.Log
 import androidx.core.app.ServiceCompat
-import androidx.core.content.getSystemService
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.krmob.screentextreader.feature.capture.data.CaptureSessionStore
@@ -27,6 +26,8 @@ private const val ACTION_STOP_CAPTURE = "com.krmob.screentextreader.action.STOP_
 /** Foreground service that owns the media projection for the lifetime of one capture session. */
 @AndroidEntryPoint
 class ScreenCaptureService : LifecycleService() {
+    @Inject lateinit var mediaProjectionManager: MediaProjectionManager
+
     @Inject lateinit var sessionRunner: ScreenCaptureSessionRunner
 
     @Inject lateinit var sessionStore: CaptureSessionStore
@@ -83,8 +84,6 @@ class ScreenCaptureService : LifecycleService() {
 
     private suspend fun capture(consent: CaptureConsent) {
         try {
-            val mediaProjectionManager =
-                checkNotNull(getSystemService<MediaProjectionManager>()) { "MediaProjectionManager is not available" }
             val mediaProjection = mediaProjectionManager.getMediaProjection(consent.resultCode, consent.data)
             if (mediaProjection == null) {
                 Log.e(TAG, "The system returned no media projection for the granted consent")
@@ -93,7 +92,8 @@ class ScreenCaptureService : LifecycleService() {
             }
             sessionRunner.run(mediaProjection)
         } catch (exception: CancellationException) {
-            Log.d(TAG, "Capture cancelled with the service", exception)
+            // Stopping the service cancels the session; this is not a failure and must not be caught below.
+            Log.i(TAG, "Capture cancelled with the service")
             throw exception
         } catch (exception: SecurityException) {
             Log.e(TAG, "The system rejected the media projection", exception)

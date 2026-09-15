@@ -6,7 +6,6 @@ import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import com.krmob.screentextreader.feature.capture.data.CaptureSessionStore
 import com.krmob.screentextreader.feature.capture.domain.CaptureFailure
 import com.krmob.screentextreader.feature.capture.domain.ScreenCaptureController
@@ -18,9 +17,10 @@ private const val TAG = "CaptureController"
 /** Hands the user's consent to [ScreenCaptureService], which owns the projection while it runs. */
 class ForegroundServiceCaptureController @Inject constructor(
     @param:ApplicationContext private val context: Context,
+    private val mediaProjectionManager: MediaProjectionManager,
     private val sessionStore: CaptureSessionStore
 ) : ScreenCaptureController {
-    override fun createConsentIntent(): Intent = mediaProjectionManager().createScreenCaptureIntent()
+    override fun createConsentIntent(): Intent = mediaProjectionManager.createScreenCaptureIntent()
 
     override fun onConsentResult(resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK || data == null) {
@@ -45,7 +45,4 @@ class ForegroundServiceCaptureController @Inject constructor(
     override fun dismissFailure() {
         sessionStore.dismissFailure()
     }
-
-    private fun mediaProjectionManager(): MediaProjectionManager =
-        checkNotNull(context.getSystemService<MediaProjectionManager>()) { "MediaProjectionManager is not available" }
 }

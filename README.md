@@ -33,7 +33,7 @@ feature/
   capture/
     domain/        CaptureState, CaptureSession, ScreenCaptureController, ScreenTextReader.scan()
     data/          CaptureSessionStore, ScreenCaptureSessionRunner, MediaProjectionScreenCapturer,
-                   RgbaFrameCopier, MlKitTextRecognizer, ProjectionCallback
+                   ImageConversion, MlKitTextRecognizer, ProjectionCallback
     service/       ScreenCaptureService, ForegroundServiceCaptureController, CaptureNotifications
     ui/            CaptureRoute, CaptureScreen, CaptureViewModel, components
 ```

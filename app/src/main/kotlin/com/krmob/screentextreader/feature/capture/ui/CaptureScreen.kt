@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,12 +27,7 @@ import com.krmob.screentextreader.feature.capture.ui.component.NumberStatisticsC
 import com.krmob.screentextreader.feature.capture.ui.component.RecognizedLineRow
 import com.krmob.screentextreader.feature.capture.ui.component.RecognizedLinesHeader
 
-private const val HEADER_KEY = "header"
-private const val STATUS_KEY = "status"
-private const val SETTINGS_KEY = "settings"
-private const val STATISTICS_KEY = "statistics"
-private const val LINES_HEADER_KEY = "linesHeader"
-private const val LINES_EMPTY_KEY = "linesEmpty"
+// Lets the list reuse line rows among the cards above them.
 private const val LINE_CONTENT_TYPE = "line"
 
 @Composable
@@ -47,22 +42,21 @@ fun CaptureScreen(
 ) {
     Scaffold(modifier = modifier) { contentPadding ->
         LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-                    .consumeWindowInsets(contentPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+                .consumeWindowInsets(contentPadding),
             contentPadding = PaddingValues(all = Dimens.spacingMedium),
             verticalArrangement = Arrangement.spacedBy(Dimens.spacingMedium)
         ) {
-            item(key = HEADER_KEY) {
+            item {
                 Text(
                     text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.semantics { heading() }
                 )
             }
-            item(key = STATUS_KEY) {
+            item {
                 CaptureStatusCard(
                     captureState = uiState.captureState,
                     onStartClick = onStartClick,
@@ -70,24 +64,24 @@ fun CaptureScreen(
                     onFailureDismiss = onFailureDismiss
                 )
             }
-            item(key = SETTINGS_KEY) {
+            item {
                 AnalysisSettingsCard(
                     settings = uiState.settings,
                     onMinimumConfidenceChange = onMinimumConfidenceChange,
                     onDecimalSeparatorChange = onDecimalSeparatorChange
                 )
             }
-            item(key = STATISTICS_KEY) {
+            item {
                 NumberStatisticsCard(
                     statistics = uiState.statistics,
                     decimalSeparator = uiState.settings.decimalSeparator
                 )
             }
-            item(key = LINES_HEADER_KEY) {
+            item {
                 RecognizedLinesHeader(rejectedLineCount = uiState.rejectedLineCount)
             }
             if (uiState.acceptedLines.isEmpty()) {
-                item(key = LINES_EMPTY_KEY) {
+                item {
                     Text(
                         text = stringResource(R.string.lines_empty),
                         style = MaterialTheme.typography.bodyMedium,
@@ -95,11 +89,7 @@ fun CaptureScreen(
                     )
                 }
             } else {
-                itemsIndexed(
-                    items = uiState.acceptedLines,
-                    key = { index, _ -> index },
-                    contentType = { _, _ -> LINE_CONTENT_TYPE }
-                ) { _, line ->
+                items(uiState.acceptedLines, contentType = { LINE_CONTENT_TYPE }) { line ->
                     RecognizedLineRow(line = line)
                 }
             }

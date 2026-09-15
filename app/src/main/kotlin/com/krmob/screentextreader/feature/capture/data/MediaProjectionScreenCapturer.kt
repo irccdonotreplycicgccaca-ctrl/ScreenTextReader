@@ -36,12 +36,11 @@ internal class MediaProjectionScreenCapturer(
                 null
             )
         ) { "The virtual display for screen capture could not be created" }
-    private val frameCopier = RgbaFrameCopier()
 
     /** Returns the newest frame, or null when the screen has not changed since the previous call. */
     fun latestFrame(): Bitmap? {
         resizeIfContentSizeChanged()
-        return imageReader.acquireLatestImage()?.use(frameCopier::copy)
+        return imageReader.acquireLatestImage()?.use { image -> image.toBitmap() }
     }
 
     override fun close() {

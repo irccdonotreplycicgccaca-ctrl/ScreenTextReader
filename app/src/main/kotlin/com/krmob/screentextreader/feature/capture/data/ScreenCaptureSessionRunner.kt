@@ -36,35 +36,18 @@ class ScreenCaptureSessionRunner @Inject constructor(
     /** Suspends until the projection ends or the caller is cancelled; the projection is always stopped on return. */
     suspend fun run(mediaProjection: MediaProjection) {
         val projectionCallback = ProjectionCallback(initialSize = maximumWindowSize())
-        // The callback must be registered before the virtual display is created.
+        // Android 14 requires the callback to be registered before the virtual display is created.
         mediaProjection.registerCallback(projectionCallback, Handler(Looper.getMainLooper()))
         try {
             MlKitTextRecognizer().use { recognizer ->
-                MediaProjectionScreenCapturer(
+                val capturer = MediaProjectionScreenCapturer(
                     mediaProjection = mediaProjection,
                     contentSize = projectionCallback.contentSize,
                     densityDpi = context.resources.configuration.densityDpi
-                ).use { capturer ->
-                    val reader = ScreenTextReader {
-                        capturer.latestFrame()?.let { frame -> recognizer.recognizeOrSkip(frame) }
-                    }
-                    // Reading this app's own screen would feed the results back into the recognizer.
-                    val shouldScan = combine(
-                        projectionCallback.isContentVisible,
-                        appVisibility.isInForeground
-                    ) { isContentVisible, isAppInForeground -> isContentVisible && !isAppInForeground }
+                )
+                capturer.use {
                     Log.i(TAG, "Capture session started")
-                    coroutineScope {
-                        launch { shouldScan.collect { isScanning -> sessionStore.markRunning(isPaused = !isScanning) } }
-                        launch {
-                            reader
-                                .scan(shouldScan, SCAN_INTERVAL)
-                                .flowOn(defaultDispatcher)
-                                .collect(sessionStore::publish)
-                        }
-                        projectionCallback.awaitStop()
-                        coroutineContext.cancelChildren()
-                    }
+                    readUntilStopped(capturer, recognizer, projectionCallback)
                 }
             }
         } finally {
@@ -73,6 +56,23 @@ class ScreenCaptureSessionRunner @Inject constructor(
             sessionStore.markStopped()
             Log.i(TAG, "Capture session stopped")
         }
+    }
+
+    private suspend fun readUntilStopped(
+        capturer: MediaProjectionScreenCapturer,
+        recognizer: MlKitTextRecognizer,
+        projectionCallback: ProjectionCallback
+    ) = coroutineScope {
+        val reader = ScreenTextReader { capturer.latestFrame()?.let { frame -> recognizer.recognizeOrSkip(frame) } }
+        // Reading this app's own screen would feed the results back into the recognizer.
+        val shouldScan = combine(
+            projectionCallback.isContentVisible,
+            appVisibility.isInForeground
+        ) { isContentVisible, isAppInForeground -> isContentVisible && !isAppInForeground }
+        launch { shouldScan.collect { isScanning -> sessionStore.markRunning(isPaused = !isScanning) } }
+        launch { reader.scan(shouldScan, SCAN_INTERVAL).flowOn(defaultDispatcher).collect(sessionStore::publish) }
+        projectionCallback.awaitStop()
+        coroutineContext.cancelChildren()
     }
 
     private fun maximumWindowSize(): CaptureSize {
