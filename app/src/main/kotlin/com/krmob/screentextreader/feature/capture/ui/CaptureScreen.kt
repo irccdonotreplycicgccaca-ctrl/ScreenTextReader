@@ -1,3 +1,4 @@
+
 package com.krmob.screentextreader.feature.capture.ui
 
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +28,6 @@ import com.krmob.screentextreader.feature.capture.ui.component.NumberStatisticsC
 import com.krmob.screentextreader.feature.capture.ui.component.RecognizedLineRow
 import com.krmob.screentextreader.feature.capture.ui.component.RecognizedLinesHeader
 
-// Rows share one content type so LazyColumn can reuse their compositions.
 private const val LINE_CONTENT_TYPE = "line"
 
 @Composable
@@ -56,6 +56,7 @@ fun CaptureScreen(
                     modifier = Modifier.semantics { heading() }
                 )
             }
+
             item {
                 CaptureStatusCard(
                     captureState = uiState.captureState,
@@ -64,6 +65,24 @@ fun CaptureScreen(
                     onFailureDismiss = onFailureDismiss
                 )
             }
+
+            item {
+                Text(
+                    text = "Multiplicateurs détectés",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = if (uiState.crashMultipliers.isEmpty()) {
+                        "Aucun multiplicateur détecté"
+                    } else {
+                        uiState.crashMultipliers.joinToString("   ") {
+                            "X${it.stripTrailingZeros().toPlainString()}"
+                        }
+                    },
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+
             item {
                 AnalysisSettingsCard(
                     settings = uiState.settings,
@@ -71,15 +90,18 @@ fun CaptureScreen(
                     onDecimalSeparatorChange = onDecimalSeparatorChange
                 )
             }
+
             item {
                 NumberStatisticsCard(
                     statistics = uiState.statistics,
                     decimalSeparator = uiState.settings.decimalSeparator
                 )
             }
+
             item {
                 RecognizedLinesHeader(rejectedLineCount = uiState.rejectedLineCount)
             }
+
             if (uiState.acceptedLines.isEmpty()) {
                 item {
                     Text(
