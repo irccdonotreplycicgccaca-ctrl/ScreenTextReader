@@ -1,3 +1,4 @@
+
 package com.krmob.screentextreader.feature.analysis.domain
 
 import java.math.BigDecimal
@@ -13,12 +14,9 @@ class CrashMultiplierParser @Inject constructor() {
         """(?i)(?<![\p{L}\p{N}])X\s*(\d+(?:[.,]\d+)?)(?![\p{L}\p{N}]|[.,]\d)"""
     )
 
-    fun parse(lines: List<String>): List<BigDecimal> {
-        return lines.flatMap { line ->
-            pattern.findAll(line).map { match ->
-                BigDecimal(match.groupValues[1].replace(',', '.'))
-            }.toList()
-        }
+    fun parse(lines: List<String>): List<BigDecimal> = lines.flatMap { line ->
+        pattern.findAll(line).map { match ->
+            BigDecimal(match.groupValues[1].replace(',', '.'))
+        }.toList()
     }
 }
-
