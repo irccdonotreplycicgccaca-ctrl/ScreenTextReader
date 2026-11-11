@@ -1,3 +1,4 @@
+
 package com.krmob.screentextreader.feature.capture.ui
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -14,19 +15,24 @@ internal class CaptureUiStatePreviewParameterProvider : PreviewParameterProvider
             captureState = CaptureState.Running(isPaused = false),
             acceptedLines =
                 persistentListOf(
-                    RecognizedLine(text = "Faktura FV 214/09/2026", confidence = 0.97f),
-                    RecognizedLine(text = "Netto 1 250,00 zł", confidence = 0.93f),
-                    RecognizedLine(text = "VAT 287,50 zł", confidence = 0.91f)
+                    RecognizedLine(text = "X1.74", confidence = 0.97f),
+                    RecognizedLine(text = "X1.17", confidence = 0.93f),
+                    RecognizedLine(text = "X2.10", confidence = 0.91f)
                 ),
             rejectedLineCount = 1,
             statistics =
                 NumberStatistics.Summary(
                     count = 2,
-                    sum = BigDecimal("1537.50"),
-                    minimum = BigDecimal("287.50"),
-                    maximum = BigDecimal("1250.00"),
-                    average = BigDecimal("768.75")
-                )
+                    sum = BigDecimal("3.27"),
+                    minimum = BigDecimal("1.17"),
+                    maximum = BigDecimal("2.10"),
+                    average = BigDecimal("1.635")
+                ),
+            crashMultipliers = persistentListOf(
+                BigDecimal("1.74"),
+                BigDecimal("1.17"),
+                BigDecimal("2.10")
+            )
         )
 
     override val values: Sequence<CaptureUiState> =
