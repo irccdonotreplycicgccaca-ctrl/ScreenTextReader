@@ -116,10 +116,7 @@ class CaptureViewModel @Inject constructor(
         }
     }
 
-    private fun findNewMultipliers(
-        previous: List<BigDecimal>,
-        current: List<BigDecimal>
-    ): List<BigDecimal> {
+    private fun findNewMultipliers(previous: List<BigDecimal>, current: List<BigDecimal>): List<BigDecimal> {
         if (previous.isEmpty()) return current
 
         val maxOverlap = minOf(previous.size, current.size)
