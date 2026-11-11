@@ -1,5 +1,5 @@
 package com.krmob.screentextreader.feature.capture.ui
-
+import com.krmob.screentextreader.feature.analysis.domain.CrashMultiplierParser
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
