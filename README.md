@@ -1,6 +1,6 @@
 # Screen Text Reader
 
-A small Android app that reads text from the screen in real time. It captures the screen with the MediaProjection API inside a foreground service, recognizes text on new frames with ML Kit, and turns the result into a short numeric analysis that the user can tune with two parameters.
+A small Android app that reads text from the screen in real time. It captures the screen with the MediaProjection API. inside a foreground service, recognizes text on new frames with ML Kit, and turns the result into a short numeric analysis that the user can tune with two parameters.
 
 The project is a compact example of how I structure a native Android app in Kotlin: clear ownership of state, platform APIs kept behind small seams, and the logic that matters covered by tests.
 
