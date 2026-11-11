@@ -1,3 +1,4 @@
+
 package com.krmob.screentextreader.feature.capture.ui
 
 import android.content.Intent
@@ -6,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.krmob.screentextreader.core.coroutines.DefaultDispatcher
 import com.krmob.screentextreader.feature.analysis.domain.AnalysisSettings
+import com.krmob.screentextreader.feature.analysis.domain.CrashMultiplierParser
 import com.krmob.screentextreader.feature.analysis.domain.DecimalSeparator
 import com.krmob.screentextreader.feature.analysis.domain.TextAnalyzer
 import com.krmob.screentextreader.feature.capture.domain.CaptureSession
@@ -30,10 +32,11 @@ class CaptureViewModel @Inject constructor(
     captureSession: CaptureSession,
     private val captureController: ScreenCaptureController,
     private val textAnalyzer: TextAnalyzer,
+    private val crashMultiplierParser: CrashMultiplierParser,
     private val savedStateHandle: SavedStateHandle,
     @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    // Kept in SavedStateHandle so the chosen parameters survive process death.
+
     private val settings: Flow<AnalysisSettings> = combine(
         savedStateHandle.getStateFlow(KEY_MINIMUM_CONFIDENCE, AnalysisSettings.DEFAULT.minimumConfidence),
         savedStateHandle.getStateFlow(KEY_DECIMAL_SEPARATOR, AnalysisSettings.DEFAULT.decimalSeparator)
@@ -47,12 +50,17 @@ class CaptureViewModel @Inject constructor(
         settings
     ) { captureState, recognizedText, settings ->
         val analysis = textAnalyzer.analyze(recognizedText, settings)
+        val multipliers = crashMultiplierParser.parse(
+            analysis.acceptedLines.map { it.text }
+        )
+
         CaptureUiState(
             captureState = captureState,
             settings = settings,
             acceptedLines = analysis.acceptedLines.toImmutableList(),
             rejectedLineCount = analysis.rejectedLineCount,
-            statistics = analysis.statistics
+            statistics = analysis.statistics,
+            crashMultipliers = multipliers.toImmutableList()
         )
     }
         .flowOn(defaultDispatcher)
@@ -77,7 +85,8 @@ class CaptureViewModel @Inject constructor(
     }
 
     fun onMinimumConfidenceChange(minimumConfidence: Float) {
-        savedStateHandle[KEY_MINIMUM_CONFIDENCE] = minimumConfidence.coerceIn(AnalysisSettings.CONFIDENCE_RANGE)
+        savedStateHandle[KEY_MINIMUM_CONFIDENCE] =
+            minimumConfidence.coerceIn(AnalysisSettings.CONFIDENCE_RANGE)
     }
 
     fun onDecimalSeparatorChange(decimalSeparator: DecimalSeparator) {
