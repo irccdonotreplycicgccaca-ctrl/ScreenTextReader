@@ -133,9 +133,7 @@ class CaptureViewModelTest {
         assertEquals(1, captureController.dismissCount)
     }
 
-    private fun createViewModel(
-        savedStateHandle: SavedStateHandle = SavedStateHandle()
-    ) = CaptureViewModel(
+    private fun createViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) = CaptureViewModel(
         captureSession = captureSession,
         captureController = captureController,
         textAnalyzer = TextAnalyzer(NumberParser()),
@@ -146,8 +144,7 @@ class CaptureViewModelTest {
 
     private fun textOf(vararg lines: RecognizedLine) = RecognizedText(lines = lines.toList())
 
-    private fun summaryOf(uiState: CaptureUiState) =
-        assertIs<NumberStatistics.Summary>(uiState.statistics)
+    private fun summaryOf(uiState: CaptureUiState) = assertIs<NumberStatistics.Summary>(uiState.statistics)
 }
 
 private class FakeCaptureSession : CaptureSession {
@@ -164,8 +161,7 @@ private class FakeScreenCaptureController : ScreenCaptureController {
     var dismissCount = 0
         private set
 
-    override fun createConsentIntent(): Intent =
-        error("The consent intent is created by the Android framework")
+    override fun createConsentIntent(): Intent = error("The consent intent is created by the Android framework")
 
     override fun onConsentResult(resultCode: Int, data: Intent?) {
         consentResultCodes += resultCode
