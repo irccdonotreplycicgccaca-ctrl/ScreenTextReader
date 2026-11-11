@@ -1,10 +1,12 @@
+
 package com.krmob.screentextreader.feature.capture.ui
-import com.krmob.screentextreader.feature.analysis.domain.CrashMultiplierParser
+
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.krmob.screentextreader.core.model.RecognizedLine
 import com.krmob.screentextreader.core.model.RecognizedText
+import com.krmob.screentextreader.feature.analysis.domain.CrashMultiplierParser
 import com.krmob.screentextreader.feature.analysis.domain.DecimalSeparator
 import com.krmob.screentextreader.feature.analysis.domain.NumberParser
 import com.krmob.screentextreader.feature.analysis.domain.NumberStatistics
@@ -24,6 +26,7 @@ import org.junit.Test
 private const val DECLINED_RESULT_CODE = 0
 
 class CaptureViewModelTest {
+
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
@@ -62,7 +65,9 @@ class CaptureViewModelTest {
 
     @Test
     fun `raising the minimum confidence re-analyses the text already recognized`() = runTest {
-        captureSession.recognizedText.value = textOf(RecognizedLine(text = "Suma 5", confidence = 0.8f))
+        captureSession.recognizedText.value = textOf(
+            RecognizedLine(text = "Szum 5", confidence = 0.8f)
+        )
         val viewModel = createViewModel()
 
         viewModel.uiState.test {
@@ -79,7 +84,9 @@ class CaptureViewModelTest {
 
     @Test
     fun `switching the decimal separator re-parses the numbers`() = runTest {
-        captureSession.recognizedText.value = textOf(RecognizedLine(text = "Kwota 1.234", confidence = 0.9f))
+        captureSession.recognizedText.value = textOf(
+            RecognizedLine(text = "Kwota 1.234", confidence = 0.9f)
+        )
         val viewModel = createViewModel()
 
         viewModel.uiState.test {
@@ -126,17 +133,21 @@ class CaptureViewModelTest {
         assertEquals(1, captureController.dismissCount)
     }
 
-    private fun createViewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) = CaptureViewModel(
+    private fun createViewModel(
+        savedStateHandle: SavedStateHandle = SavedStateHandle()
+    ) = CaptureViewModel(
         captureSession = captureSession,
         captureController = captureController,
         textAnalyzer = TextAnalyzer(NumberParser()),
+        crashMultiplierParser = CrashMultiplierParser(),
         savedStateHandle = savedStateHandle,
         defaultDispatcher = mainDispatcherRule.testDispatcher
     )
 
     private fun textOf(vararg lines: RecognizedLine) = RecognizedText(lines = lines.toList())
 
-    private fun summaryOf(uiState: CaptureUiState) = assertIs<NumberStatistics.Summary>(uiState.statistics)
+    private fun summaryOf(uiState: CaptureUiState) =
+        assertIs<NumberStatistics.Summary>(uiState.statistics)
 }
 
 private class FakeCaptureSession : CaptureSession {
@@ -153,7 +164,8 @@ private class FakeScreenCaptureController : ScreenCaptureController {
     var dismissCount = 0
         private set
 
-    override fun createConsentIntent(): Intent = error("The consent intent is created by the Android framework")
+    override fun createConsentIntent(): Intent =
+        error("The consent intent is created by the Android framework")
 
     override fun onConsentResult(resultCode: Int, data: Intent?) {
         consentResultCodes += resultCode
